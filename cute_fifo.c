@@ -21,7 +21,6 @@ uint8_t fifo_push(fifo *f, uint8_t data)
     {
         return RET_ERR;
     }
-    printf("[push]-rp:%d ,wp:%d ",f->rp,f->wp);
     ((uint8_t *)f->p)[f->wp] = data;
     f->num += 1;
     if (f->max == (f->wp + 1))
@@ -32,7 +31,6 @@ uint8_t fifo_push(fifo *f, uint8_t data)
     {
         f->wp += 1;
     }
-    printf("num:%d,data:%d\r\n",f->num,data);
     return RET_OK;
 }
 /**
@@ -47,7 +45,6 @@ uint8_t fifo_pull(fifo *f, uint8_t *data)
     {
         return RET_ERR;
     }
-    printf("pull-rp:%d ,wp:%d ",f->rp,f->wp);
     *data = ((uint8_t *)f->p)[f->rp];
     f->num -= 1;
     if (f->max == (f->rp + 1))
@@ -58,6 +55,5 @@ uint8_t fifo_pull(fifo *f, uint8_t *data)
     {
         f->rp += 1;
     }
-    printf("num:%d data:%d\r\n",f->num,*data);
     return RET_OK;
 }
