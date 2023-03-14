@@ -70,7 +70,7 @@ uint8_t fifo_push_bytes(fifo *f,uint8_t *data,uint16_t length)
         return RET_ERR;
     }
     
-    if(f->wp + length >= f->max)//分段写入
+    if(f->wp + length > f->max)//分段写入
     {
         uint16_t len1 = f->max - f->wp; //计算max前面可以写入的数据长度
         memcpy(f->p + f->wp, data, len1);
