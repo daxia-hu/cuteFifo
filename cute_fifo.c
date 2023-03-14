@@ -1,7 +1,7 @@
 #include "cute_fifo.h"
 /**
- * @brief fifo¶ÔÏó³õÊ¼»¯
- * @param f fifo¶ÔÏó
+ * @brief fifoå¯¹è±¡åˆå§‹åŒ–
+ * @param f fifoå¯¹è±¡
 */
 void fifo_reset(fifo* f)
 {
@@ -10,10 +10,10 @@ void fifo_reset(fifo* f)
     f->rp = 0;
 }
 /**
- * @brief ÏòfifoÖÐÍÆÊý¾Ý
- * @param f fifo¶ÔÏó
- * @param data ´ýÍÆ½øÈ¥µÄÊý¾Ý
- * @return push½á¹û
+ * @brief å‘fifoä¸­æŽ¨æ•°æ®
+ * @param f fifoå¯¹è±¡
+ * @param data å¾…æŽ¨è¿›åŽ»çš„æ•°æ®
+ * @return pushç»“æžœ
 */
 uint8_t fifo_push(fifo *f, uint8_t data)
 {
@@ -34,10 +34,10 @@ uint8_t fifo_push(fifo *f, uint8_t data)
     return RET_OK;
 }
 /**
- * @brief ´ÓfifoÖÐÈ¡Êý¾Ý
- * @param f fifo¶ÔÏó
- * @param data È¡³öÊý¾ÝºóµÄÊý¾ÝÖ¸Õë
- * @return È¡Êý¾Ý½á¹û 
+ * @brief ä»Žfifoä¸­å–æ•°æ®
+ * @param f fifoå¯¹è±¡
+ * @param data å–å‡ºæ•°æ®åŽçš„æ•°æ®æŒ‡é’ˆ
+ * @return å–æ•°æ®ç»“æžœ 
  */
 uint8_t fifo_pull(fifo *f, uint8_t *data)
 {
@@ -55,5 +55,61 @@ uint8_t fifo_pull(fifo *f, uint8_t *data)
     {
         f->rp += 1;
     }
+    return RET_OK;
+}
+/**
+ * @brief å‘fifoä¸­æŽ¨å˜é•¿æ•°æ®
+ * @param f fifoå¯¹è±¡
+ * @param data å¾…æŽ¨è¿›åŽ»çš„æ•°æ®
+ * @return pushç»“æžœ
+*/
+uint8_t fifo_push_bytes(fifo *f,uint8_t *data,uint16_t length)
+{
+    if ((f->num + length) > f->max)
+    {
+        return RET_ERR;
+    }
+    
+    if(f->wp + length >= f->max)//åˆ†æ®µå†™å…¥
+    {
+        uint16_t len1 = f->max - f->wp; //è®¡ç®—maxå‰é¢å¯ä»¥å†™å…¥çš„æ•°æ®é•¿åº¦
+        memcpy(f->p + f->wp, data, len1);
+        memcpy(f->p, data + len1, length - len1);
+        f->wp +=  length - len1;
+    }
+    else
+    {
+        memcpy(f->p + f->wp,data,length);
+        f->wp += length;
+    }
+    f->num += length;
+    return RET_OK;
+}
+/**
+ * @brief ä»Žfifoä¸­å–å˜é•¿æ•°æ®
+ * @param f fifoå¯¹è±¡
+ * @param data å–å‡ºæ•°æ®åŽçš„æ•°æ®æŒ‡é’ˆ
+ * @return å–æ•°æ®ç»“æžœ 
+ */
+uint8_t fifo_pull_bytes(fifo *f,uint8_t *data,uint16_t length)
+{
+    if (length > f->num)
+    {
+        return RET_ERR;
+    }
+
+    if (f->max - f->rp < length)
+    {
+        uint16_t len1 = f->max - f->rp;
+        memcpy(data,f->p + f->rp,len1);
+        memcpy(data + len1,f->p,length - len1);
+        f->rp += (length - len1);
+    }
+    else
+    {
+        memcpy(data,f->p + f->rp,length);
+        f->rp+= length;
+    }
+    f->num-= length;
     return RET_OK;
 }

@@ -2,34 +2,48 @@
 #define CUTE_FIFO_H
 #include "stdint.h"
 #include "stdio.h"
+#include "string.h"
 #define RET_ERR (0)
 #define RET_OK (1)
 typedef struct fifo_t
 {
-    uint16_t max;   //×î´ó¸öÊı
-    uint16_t num;   //µ±Ç°Êµ¼Ê¸öÊı
-    uint16_t wp;    //Ğ´Ö¸Õë
-    uint16_t rp;    //¶ÁÖ¸Õë
-    void *p;        //Êı¾İ³ØÖ¸Õë
+    uint16_t max;   //æœ€å¤§ä¸ªæ•°
+    uint16_t num;   //å½“å‰å®é™…ä¸ªæ•°
+    uint16_t wp;    //å†™æŒ‡é’ˆ
+    uint16_t rp;    //è¯»æŒ‡é’ˆ
+    void *p;        //æ•°æ®æ± æŒ‡é’ˆ
 }fifo;
-
 /**
- * @brief fifo¶ÔÏó³õÊ¼»¯
- * @param f fifo¶ÔÏó
+ * @brief fifoå¯¹è±¡åˆå§‹åŒ–
+ * @param f fifoå¯¹è±¡
 */
 void fifo_reset(fifo* f);
 /**
- * @brief ÏòfifoÖĞÍÆÊı¾İ
- * @param f fifo¶ÔÏó
- * @param data ´ıÍÆ½øÈ¥µÄÊı¾İ
- * @return push½á¹û
+ * @brief å‘fifoä¸­æ¨æ•°æ®
+ * @param f fifoå¯¹è±¡
+ * @param data å¾…æ¨è¿›å»çš„æ•°æ®
+ * @return pushç»“æœ
 */
 uint8_t fifo_push(fifo *f,uint8_t data);
 /**
- * @brief ´ÓfifoÖĞÈ¡Êı¾İ
- * @param f fifo¶ÔÏó
- * @param data È¡³öÊı¾İºóµÄÊı¾İÖ¸Õë
- * @return È¡Êı¾İ½á¹û 
+ * @brief ä»fifoä¸­å–æ•°æ®
+ * @param f fifoå¯¹è±¡
+ * @param data å–å‡ºæ•°æ®åçš„æ•°æ®æŒ‡é’ˆ
+ * @return å–æ•°æ®ç»“æœ 
  */
 uint8_t fifo_pull(fifo *f,uint8_t *data);
+/**
+ * @brief å‘fifoä¸­æ¨å˜é•¿æ•°æ®
+ * @param f fifoå¯¹è±¡
+ * @param data å¾…æ¨è¿›å»çš„æ•°æ®
+ * @return pushç»“æœ
+*/
+uint8_t fifo_push_bytes(fifo *f,uint8_t *data,uint16_t length);
+/**
+ * @brief ä»fifoä¸­å–å˜é•¿æ•°æ®
+ * @param f fifoå¯¹è±¡
+ * @param data å–å‡ºæ•°æ®åçš„æ•°æ®æŒ‡é’ˆ
+ * @return å–æ•°æ®ç»“æœ 
+ */
+uint8_t fifo_pull_bytes(fifo *f,uint8_t *data,uint16_t length);
 #endif

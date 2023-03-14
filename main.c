@@ -9,21 +9,24 @@ int main()
         .p = data_arr,
     };
     fifo_reset(&fifo_a);
-    uint8_t temp = 0;
-    uint8_t ret = 0;
+    uint8_t send_data[5] = {10,20,30,40,50};
+    fifo_push_bytes(&fifo_a,send_data,5);
 
-    fifo_push(&fifo_a,10);
-    fifo_push(&fifo_a,20);
-    fifo_push(&fifo_a,30);
-    fifo_push(&fifo_a,40);
-    fifo_pull(&fifo_a, &temp);
-    fifo_pull(&fifo_a, &temp);
-    fifo_push(&fifo_a,50);
-    fifo_push(&fifo_a,60);
+    uint8_t r1 = 0;
+    fifo_pull(&fifo_a,&r1);
+    printf("r1:%d\r\n",r1);
+    fifo_pull(&fifo_a,&r1);
+    printf("r1:%d\r\n",r1);
+    fifo_pull(&fifo_a,&r1);
+    printf("r1:%d\r\n",r1);
 
-    fifo_pull(&fifo_a, &temp);
-    fifo_pull(&fifo_a, &temp);
-    fifo_pull(&fifo_a, &temp);
-    fifo_pull(&fifo_a, &temp);
-    fifo_pull(&fifo_a, &temp);
+    uint8_t send_data1[2] = {70,80};
+    fifo_push_bytes(&fifo_a,send_data1,2);
+
+    uint8_t recv_data[5] = {0};
+    fifo_pull_bytes(&fifo_a,recv_data,4);
+    for(int i = 0;i<4;i++)
+    {
+        printf("%d\r\n",recv_data[i]);
+    }
 }
